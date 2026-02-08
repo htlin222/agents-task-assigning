@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: add multi-agent task assignment system design\n\nArchitecture design for an MCP-based task coordination system that\nenables multiple Claude Code agents to work in parallel using git\nworktrees, with DAG dependency management, conflict prevention,\nand SQLite-backed state management.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(python3 -c \" import json, sys pkg = json.load\\(sys.stdin\\) pkg[''pnpm''] = {''onlyBuiltDependencies'': [''better-sqlite3'', ''esbuild'']} json.dump\\(pkg, sys.stdout, indent=2\\) \")",
+      "Bash(rip:*)",
+      "Bash(node -e:*)",
+      "Bash(python3:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: implement MCP server for multi-agent task coordination\n\n- SQLite-backed task management with DAG dependencies\n- Git worktree isolation per task for parallel agent work\n- File ownership system \\(exclusive/shared\\) for conflict prevention\n- 9 MCP tools: create, list, get, claim, start, update, complete, merge, cleanup\n- 78 passing tests across 4 test suites\n- npm-publishable with bin entry point and shebang\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh repo create:*)"
+    ]
+  }
+}

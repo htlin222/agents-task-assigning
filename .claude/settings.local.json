@@ -10,7 +10,13 @@
       "Bash(python3:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: implement MCP server for multi-agent task coordination\n\n- SQLite-backed task management with DAG dependencies\n- Git worktree isolation per task for parallel agent work\n- File ownership system \\(exclusive/shared\\) for conflict prevention\n- 9 MCP tools: create, list, get, claim, start, update, complete, merge, cleanup\n- 78 passing tests across 4 test suites\n- npm-publishable with bin entry point and shebang\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(gh repo create:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(git -C /Users/htlin/agents-task-assigning log --oneline --all)",
+      "Bash(git -C /Users/htlin/agents-task-assigning diff --stat HEAD)",
+      "Bash(git -C /Users/htlin/agents-task-assigning status --short)",
+      "Bash(git -C /Users/htlin/agents-task-assigning log --oneline -3)",
+      "Bash(git -C /Users/htlin/agents-task-assigning add package.json .claude/settings.local.json)",
+      "Bash(git -C /Users/htlin/agents-task-assigning commit -m \"$\\(cat <<''EOF''\nchore: format package.json and update local settings\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }

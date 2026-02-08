@@ -16,7 +16,11 @@
       "Bash(git -C /Users/htlin/agents-task-assigning status --short)",
       "Bash(git -C /Users/htlin/agents-task-assigning log --oneline -3)",
       "Bash(git -C /Users/htlin/agents-task-assigning add package.json .claude/settings.local.json)",
-      "Bash(git -C /Users/htlin/agents-task-assigning commit -m \"$\\(cat <<''EOF''\nchore: format package.json and update local settings\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git -C /Users/htlin/agents-task-assigning commit -m \"$\\(cat <<''EOF''\nchore: format package.json and update local settings\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(git -C /Users/htlin/agents-task-assigning tag -a v0.2.0 -m \"v0.2.0\")",
+      "Bash(git -C /Users/htlin/agents-task-assigning push)",
+      "Bash(git -C /Users/htlin/agents-task-assigning push --tags)"
     ]
   }
 }

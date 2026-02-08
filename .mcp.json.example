@@ -1,0 +1,8 @@
+{
+	"mcpServers": {
+		"task-assigner": {
+			"command": "npx",
+			"args": ["-y", "agents-task-assigning"]
+		}
+	}
+}

@@ -53,11 +53,11 @@
 
 ```typescript
 interface TaskGroup {
-  id: string;                  // UUID
-  title: string;               // e.g. "Blog 系統開發"
-  description: string;         // 原始需求描述
-  created_at: string;          // ISO 8601
-  status: 'active' | 'completed' | 'archived';
+  id: string; // UUID
+  title: string; // e.g. "Blog 系統開發"
+  description: string; // 原始需求描述
+  created_at: string; // ISO 8601
+  status: "active" | "completed" | "archived";
 }
 ```
 
@@ -65,18 +65,18 @@ interface TaskGroup {
 
 ```typescript
 interface Task {
-  id: string;                  // UUID
-  group_id: string;            // FK → TaskGroup
-  sequence: number;            // 顯示用序號 (e.g. 1, 2, 3)
-  title: string;               // 簡短標題
-  description: string;         // 詳細描述，含具體要求
+  id: string; // UUID
+  group_id: string; // FK → TaskGroup
+  sequence: number; // 顯示用序號 (e.g. 1, 2, 3)
+  title: string; // 簡短標題
+  description: string; // 詳細描述，含具體要求
   status: TaskStatus;
-  priority: 'high' | 'medium' | 'low';
-  assigned_to: string | null;  // agent session identifier
-  branch_name: string | null;  // e.g. "task/task-001-db-schema"
-  worktree_path: string | null;// e.g. ".worktrees/task-001-db-schema"
-  progress: number;            // 0-100
-  progress_note: string | null;// 最新進度說明
+  priority: "high" | "medium" | "low";
+  assigned_to: string | null; // agent session identifier
+  branch_name: string | null; // e.g. "task/task-001-db-schema"
+  worktree_path: string | null; // e.g. ".worktrees/task-001-db-schema"
+  progress: number; // 0-100
+  progress_note: string | null; // 最新進度說明
   created_at: string;
   started_at: string | null;
   completed_at: string | null;
@@ -84,21 +84,21 @@ interface Task {
 }
 
 type TaskStatus =
-  | 'pending'      // 等待認領
-  | 'assigned'     // 已認領，尚未開始
-  | 'in_progress'  // 進行中
-  | 'in_review'    // 完成等待 review
-  | 'completed'    // 已合併完成
-  | 'failed'       // 失敗
-  | 'blocked';     // 被依賴擋住
+  | "pending" // 等待認領
+  | "assigned" // 已認領，尚未開始
+  | "in_progress" // 進行中
+  | "in_review" // 完成等待 review
+  | "completed" // 已合併完成
+  | "failed" // 失敗
+  | "blocked"; // 被依賴擋住
 ```
 
 ### 2.3 Task Dependency（依賴關係）
 
 ```typescript
 interface TaskDependency {
-  task_id: string;             // 被擋住的任務
-  depends_on: string;          // 前置任務
+  task_id: string; // 被擋住的任務
+  depends_on: string; // 前置任務
 }
 ```
 
@@ -112,8 +112,8 @@ MCP Server 在 `claim_task` 時會驗證所有前置任務是否已 `completed`�
 ```typescript
 interface TaskFileOwnership {
   task_id: string;
-  file_pattern: string;        // glob pattern, e.g. "src/db/**"
-  ownership_type: 'exclusive' | 'shared';
+  file_pattern: string; // glob pattern, e.g. "src/db/**"
+  ownership_type: "exclusive" | "shared";
 }
 ```
 
@@ -127,8 +127,15 @@ interface ProgressLog {
   id: string;
   task_id: string;
   timestamp: string;
-  event: 'claimed' | 'started' | 'progress_update' | 'rebased'
-       | 'completed' | 'failed' | 'merged' | 'conflict_detected';
+  event:
+    | "claimed"
+    | "started"
+    | "progress_update"
+    | "rebased"
+    | "completed"
+    | "failed"
+    | "merged"
+    | "conflict_detected";
   message: string;
   metadata: Record<string, unknown> | null; // e.g. { files_changed: 5 }
 }
@@ -276,7 +283,9 @@ CREATE INDEX idx_logs_task ON progress_logs(task_id);
 
 ```typescript
 // Input
-{ task_id: string }
+{
+  task_id: string;
+}
 
 // Output — 完整的 Task + dependencies + file_ownership + progress_logs
 ```
@@ -303,6 +312,7 @@ CREATE INDEX idx_logs_task ON progress_logs(task_id);
 ```
 
 **邏輯：**
+
 1. 檢查任務狀態是否為 `pending`
 2. 檢查所有 `depends_on` 的任務是否為 `completed`
 3. 檢查檔案擁有權是否與其他 `in_progress` 任務衝突
@@ -337,6 +347,7 @@ CREATE INDEX idx_logs_task ON progress_logs(task_id);
 ```
 
 **邏輯：**
+
 1. 確認任務狀態為 `assigned`
 2. 生成 branch name: `task/task-{sequence}-{slugified-title}`
 3. 生成 worktree path: `.worktrees/task-{sequence}-{slugified-title}`
@@ -367,6 +378,7 @@ Agent 回報進度。
 ```
 
 **邏輯：**
+
 1. 更新 `progress` 和 `progress_note`
 2. 檢查 `files_changed` 是否與其他 `in_progress` 任務的檔案擁有權重疊
 3. 檢查 main 分支是否有新的合併（比較任務開始時的 commit hash）
@@ -396,6 +408,7 @@ Agent 標記任務完成，進入 review 階段。
 ```
 
 **邏輯：**
+
 1. 更新狀態為 `in_review`
 2. 設定 `completed_at`
 3. 檢查哪些下游任務的所有依賴現在都已滿足
@@ -433,6 +446,7 @@ Agent 標記任務完成，進入 review 階段。
 ```
 
 **邏輯：**
+
 1. 確認當前在主分支上
 2. 確認任務狀態為 `in_review`
 3. 執行 `git merge --squash <branch>` 或 `git merge <branch>`
@@ -513,18 +527,18 @@ Agent 標記任務完成，進入 review 階段。
 
 ### 狀態轉換規則
 
-| 從 | 到 | 觸發 | 條件 |
-|---|---|---|---|
-| pending | assigned | claim_task | 所有依賴已 completed |
-| pending | blocked | 自動 | 有依賴尚未 completed |
-| blocked | pending | 自動 | 所有依賴已 completed |
-| assigned | in_progress | start_task | — |
-| assigned | failed | cleanup_task | — |
-| in_progress | in_review | complete_task | — |
-| in_progress | blocked | 自動 | 依賴的任務被 revert（邊緣情境） |
-| in_progress | failed | cleanup_task | — |
-| in_review | completed | merge_task | merge 成功 |
-| in_review | in_progress | reject | review 不通過 |
+| 從          | 到          | 觸發          | 條件                            |
+| ----------- | ----------- | ------------- | ------------------------------- |
+| pending     | assigned    | claim_task    | 所有依賴已 completed            |
+| pending     | blocked     | 自動          | 有依賴尚未 completed            |
+| blocked     | pending     | 自動          | 所有依賴已 completed            |
+| assigned    | in_progress | start_task    | —                               |
+| assigned    | failed      | cleanup_task  | —                               |
+| in_progress | in_review   | complete_task | —                               |
+| in_progress | blocked     | 自動          | 依賴的任務被 revert（邊緣情境） |
+| in_progress | failed      | cleanup_task  | —                               |
+| in_review   | completed   | merge_task    | merge 成功                      |
+| in_review   | in_progress | reject        | review 不通過                   |
 
 ---
 
@@ -543,6 +557,7 @@ Task #3 (CRUD API):   src/db/queries/**  [shared] ⚠️
 ```
 
 **規則：**
+
 - `exclusive` 檔案只允許一個 `in_progress` 任務修改
 - `shared` 檔案允許多任務修改，但 `claim_task` 時會發出警告
 - `update_progress` 回報的 `files_changed` 會與擁有權比對
@@ -560,6 +575,7 @@ Task #3 (CRUD API):   src/db/queries/**  [shared] ⚠️
 ```
 
 Agent 收到 `rebase_recommended: true` 後，應執行：
+
 1. `git fetch origin main`
 2. `git rebase main`
 3. 如果 rebase 成功，繼續工作
@@ -579,6 +595,7 @@ Agent 收到 `rebase_recommended: true` 後，應執行：
    - 如果無法確定，標記為需要人類處理
 
 3. **回報格式：**
+
    ```
    ⚠️ 衝突無法自動解決：
 
@@ -656,6 +673,7 @@ agents-task-assigning/
 ```
 
 **選擇理由：**
+
 - `better-sqlite3`: 同步 API，適合 MCP tool 的 request-response 模型，且有良好的併發處理（WAL mode）
 - `@modelcontextprotocol/sdk`: 官方 MCP SDK
 - `tsup`: 輕量的 TypeScript bundler

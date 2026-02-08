@@ -28,7 +28,22 @@ Coordinator (main branch)
 
 ## Quick Start
 
-Add to your project's `.mcp.json`:
+One command to set up everything in your project:
+
+```bash
+npx agents-task-assigning init      # or: npx ata init
+```
+
+This will:
+
+- Create `.mcp.json` with the MCP server config (or merge into existing)
+- Add `.tasks/` and `.worktrees/` to `.gitignore`
+
+That's it. Open Claude Code and start assigning tasks.
+
+### Manual Setup
+
+If you prefer to configure manually, add to your project's `.mcp.json`:
 
 ```json
 {
@@ -39,12 +54,6 @@ Add to your project's `.mcp.json`:
     }
   }
 }
-```
-
-Or install globally:
-
-```bash
-npm install -g agents-task-assigning
 ```
 
 ## MCP Tools
@@ -298,11 +307,36 @@ You: Start task 3
 (Agent C can now claim and start the CRUD API task)
 ```
 
+## CLI
+
+```
+Usage: ata <command>
+
+Commands:
+  init     Set up agents-task-assigning in the current project
+           Creates .mcp.json, updates .gitignore
+
+  help     Show this help message
+```
+
+`ata init` is smart about existing configs:
+
+| Scenario                                | Behavior                             |
+| --------------------------------------- | ------------------------------------ |
+| No `.mcp.json`                          | Creates new file                     |
+| `.mcp.json` exists with other servers   | Merges `task-assigner` in            |
+| `.mcp.json` already has `task-assigner` | Skips (no overwrite)                 |
+| Invalid `.mcp.json`                     | Skips with warning                   |
+| No `.gitignore` (git repo)              | Creates with `.tasks/` `.worktrees/` |
+| `.gitignore` missing entries            | Appends only the missing ones        |
+| `.gitignore` already complete           | Skips                                |
+| Not a git repo                          | Skips `.gitignore`                   |
+
 ## Development
 
 ```bash
 pnpm install
-pnpm test        # run tests (78 tests)
+pnpm test        # run tests (89 tests)
 pnpm build       # build to dist/
 ```
 

@@ -6,7 +6,8 @@
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"bin": {
-		"agents-task-assigning": "dist/index.js"
+		"agents-task-assigning": "dist/index.js",
+		"ata": "dist/cli.js"
 	},
 	"files": ["dist"],
 	"keywords": [
